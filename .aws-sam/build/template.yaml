@@ -1,18 +1,16 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
-Description: >
-  aws-sam-crud-nodeapi
+Description: 'aws-sam-crud-nodeapi
 
   Sample SAM Template for aws-sam-crud-nodeapi
-  
-# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
+
+  '
 Globals:
   Function:
     Timeout: 3
     Environment:
       Variables:
         TABLE_NAME: my-table
-
 Resources:
   MyTable:
     Type: AWS::Serverless::SimpleTable
@@ -21,33 +19,32 @@ Resources:
       PrimaryKey:
         Name: name
         Type: String
-
   CreateBookFunction:
-    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Type: AWS::Serverless::Function
     Properties:
-      CodeUri: books/
+      CodeUri: CreateBookFunction
       Handler: app.create
       Runtime: nodejs12.x
       Policies:
-        - DynamoDBCrudPolicy:
-            TableName: !Ref MyTable
+      - DynamoDBCrudPolicy:
+          TableName:
+            Ref: MyTable
       Events:
         CreateBook:
-          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Type: Api
           Properties:
             Path: /book
             Method: create
-
-
   ListBooksFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: books/
+      CodeUri: ListBooksFunction
       Handler: app.list
       Runtime: nodejs12.x
       Policies:
-        - DynamoDBCrudPolicy:
-            TableName: !Ref MyTable      
+      - DynamoDBCrudPolicy:
+          TableName:
+            Ref: MyTable
       Events:
         ListBooks:
           Type: Api
@@ -57,12 +54,13 @@ Resources:
   DeleteBooksFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: books/
+      CodeUri: DeleteBooksFunction
       Handler: app.delete
       Runtime: nodejs12.x
       Policies:
-        - DynamoDBCrudPolicy:
-            TableName: !Ref MyTable
+      - DynamoDBCrudPolicy:
+          TableName:
+            Ref: MyTable
       Events:
         ListBooks:
           Type: Api
